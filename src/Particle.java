@@ -6,10 +6,10 @@ import java.util.Random;
 
 public class Particle {
 	//final double G = 6.673e-11;
-	private final double G = 0.1;
+	private final double G = .03;
 	private static int classId = 0;
 	
-	public static final double timeStep = .3;
+	public static final double timeStep = .01;
 	
 	private int id;
 	private Color color;
@@ -21,14 +21,14 @@ public class Particle {
 	private ArrayList<Particle> particles;
 	
 	public Particle() {
-		this.id = ++classId;
+		this.id = classId++;
 		Random rand = new Random();
-		this.mass = rand.nextDouble() * 100;
+		this.mass = rand.nextDouble() * 20000;
 		calcSize();
 		color = new Color(rand.nextInt(255)
 							,rand.nextInt(255)
 							,rand.nextInt(255));
-		pos = new Vector(400 + rand.nextInt(200), 400 + rand.nextInt(200));
+		pos = new Vector(400 + rand.nextInt(400), 400 + rand.nextInt(400));
 		vel = new Vector(0, 0);
 		acc = new Vector(0,0);
 		particles = new ArrayList<Particle>();

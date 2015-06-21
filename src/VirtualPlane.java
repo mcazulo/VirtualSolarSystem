@@ -15,7 +15,7 @@ public class VirtualPlane extends JPanel {
 	public VirtualPlane(){
 		this.particles = new ArrayList<Particle>();
 		// Create List 100 of particles
-		for(int i = 0; i < 100; i++) {
+		for(int i = 0; i < 500; i++) {
 			this.particles.add(new Particle());
 		}
 		// Give each particles the list of particles

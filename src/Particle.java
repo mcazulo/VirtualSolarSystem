@@ -8,10 +8,10 @@ public class Particle {
 	//final double G = 6.673e-11;
 	private final double G = .03;
 	private static int classId = 0;
-	
-	public static final double timeStep = .01;
+	public static final double timeStep = .2;
 	
 	private int id;
+	private boolean removed;
 	private Color color;
 	private double mass;
 	private int size;
@@ -22,16 +22,32 @@ public class Particle {
 	
 	public Particle() {
 		this.id = classId++;
+		removed = false;
 		Random rand = new Random();
-		this.mass = rand.nextDouble() * 20000;
+		this.mass = rand.nextDouble() * 1000;
 		calcSize();
 		color = new Color(rand.nextInt(255)
 							,rand.nextInt(255)
 							,rand.nextInt(255));
-		pos = new Vector(400 + rand.nextInt(400), 400 + rand.nextInt(400));
+		pos = new Vector(rand.nextInt(1400), rand.nextInt(1200));
 		vel = new Vector(0, 0);
 		acc = new Vector(0,0);
 		particles = new ArrayList<Particle>();
+	}
+	
+	public Particle(int xPos, int yPos, Vector initVel, double mass){
+		this.id = classId++;
+		removed = false;
+		this.mass = mass;
+		calcSize();
+		pos = new Vector(xPos, yPos);
+		vel = initVel;
+		acc = new Vector(0,0);
+		particles = new ArrayList<Particle>();
+		Random rand = new Random();
+		color = new Color(rand.nextInt(255)
+				,rand.nextInt(255)
+				,rand.nextInt(255));
 	}
 	
 	public Vector getPos() {
@@ -50,7 +66,7 @@ public class Particle {
 	public void setAcceleration() {
 		for(int i = id; i < particles.size(); i++) {
 			// don't attract yourself
-			if(i != id){
+			if(i != id && !particles.get(i).isRemoved()){
 				Vector vec = new Vector(particles.get(i).getPos().getX() - pos.getX()
 										,particles.get(i).getPos().getY() - pos.getY());
 				double dis = Vector.distance(pos, particles.get(i).getPos());
@@ -78,23 +94,47 @@ public class Particle {
 	public void render(Graphics g) {
 		g.setColor(color);
 		// draw circles
-		g.fillOval((int)pos.getX()
-					,(int)pos.getY()
+		g.fillOval((int)((double)pos.getX() - ((double)size / 2))
+					,(int)((double)pos.getY() - ((double)size / 2))
 					,size
 					,size);
-		/*
-		// draw dots
-		g.fillRect((int)pos.getX()
-				,(int)pos.getY()
-				,size
-				,size);
-		*/
+	}
+	
+	public boolean isRemoved(){
+		return removed;
+	}
+	
+	public void remove(){
+		removed = true;
+	}
+	
+	public void unRemove(){
+		removed = false;
 	}
 	
 	public void calcSize(){
-		size = (int) (mass / 1000);
-		if(size < 10){
-			size = 10;
+		size = (int) (mass / 10000);
+		if(size < 5){
+			size = 5;
+		}
+	}
+	
+	public void collisionDetection(){
+		for(int i = id; i < particles.size(); i++){
+			if(i != id && !particles.get(i).isRemoved()){
+				double dis = Vector.distance(pos, particles.get(i).getPos());
+				if (dis < getRadius() + particles.get(i).getRadius()) {
+				    if(mass < particles.get(i).getMass()){
+				    	particles.get(i).setMass(mass + particles.get(i).getMass());
+				    	remove();
+				    	particles.get(i).calcSize();
+				    } else {
+				    	mass += particles.get(i).getMass();
+				    	particles.get(i).remove();
+				    	calcSize();
+				    }
+				}
+			}
 		}
 	}
 	
@@ -125,5 +165,13 @@ public class Particle {
 	public void setMass(double mass){
 		this.mass = mass;
 		calcSize();
+	}
+	
+	public int getSize(){
+		return size;
+	}
+	
+	public double getRadius(){
+		return (double)size / 2;
 	}
 }

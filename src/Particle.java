@@ -58,11 +58,6 @@ public class Particle {
 		return id;
 	}
 	
-	public void draw(Graphics g) {
-		simulate();
-		render(g);
-	}
-	
 	public void setAcceleration() {
 		for(int i = id; i < particles.size(); i++) {
 			// don't attract yourself
@@ -83,7 +78,7 @@ public class Particle {
 		}
 	}
 	
-	public void simulate() {
+	public void update() {
 		acc.divide(mass); // Since F = m * a, a = F / m
 		vel.timeStepAdd(acc, timeStep);
 		pos.timeStepAdd(vel, timeStep);
@@ -91,13 +86,8 @@ public class Particle {
 		acc.setY(0);
 	}
 	
-	public void render(Graphics g) {
-		g.setColor(color);
-		// draw circles
-		g.fillOval((int)((double)pos.getX() - ((double)size / 2))
-					,(int)((double)pos.getY() - ((double)size / 2))
-					,size
-					,size);
+	public Color getColor(){
+		return color;
 	}
 	
 	public boolean isRemoved(){

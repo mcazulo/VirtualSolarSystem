@@ -11,18 +11,6 @@ public class VirtualPlane extends JPanel {
 	public VirtualPlane(ArrayList<Particle> particles) {
 		this.particles = particles;
 	}
-
-	public VirtualPlane(){
-		this.particles = new ArrayList<Particle>();
-		// Create List of particles
-		for(int i = 0; i < 400; i++) {
-			this.particles.add(new Particle());
-		}
-		// Give each particles the list of particles
-		for(int i = 0; i < particles.size(); i++) {
-			this.particles.get(i).setParticles(particles);
-		}
-	}
 	
 	public void paint(Graphics g) {
 		// set the background to black
@@ -32,13 +20,13 @@ public class VirtualPlane extends JPanel {
 		g.drawString("Number of Objects: " + getNumberOfParticles(), 50, 50);
 		// loop through each particle for updating and rendering
 		for(int i = 0; i < this.particles.size(); i++){
-			if(!this.particles.get(i).isRemoved()){
-				// check for collisions and combine
-				this.particles.get(i).collisionDetection();
-				// update the acceleration for each particle
-				this.particles.get(i).setAcceleration();
-				// render each particle
-				this.particles.get(i).draw(g);
+			if(!particles.get(i).isRemoved()){
+				// draw circle
+				g.setColor(particles.get(i).getColor());
+				g.fillOval((int)(particles.get(i).getPos().getX() - (particles.get(i).getSize() / 2.0))
+							,(int)(particles.get(i).getPos().getY() - (particles.get(i).getSize() / 2.0))
+							,particles.get(i).getSize()
+							,particles.get(i).getSize());
 			}
 		}
 	}

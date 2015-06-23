@@ -3,7 +3,6 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 
-
 public class VirtualSpaceDriver {
 
 	public static void main(String[] args) {
@@ -12,7 +11,9 @@ public class VirtualSpaceDriver {
 		frame.setSize(1480, 1000);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		VirtualPlane plane = new VirtualPlane(setParticleList());
+		ArrayList<Particle> particles = setParticleList();
+		VirtualPlane plane = new VirtualPlane(particles);
+		
 		frame.add(plane);
 		frame.setVisible(true);
 		plane.setVisible(true);
@@ -23,6 +24,17 @@ public class VirtualSpaceDriver {
 			} catch(InterruptedException ex) {
 			    Thread.currentThread().interrupt();
 			}
+			for(int i = 0; i < particles.size(); i++){
+				if(!particles.get(i).isRemoved()){
+					// check for collisions and combine
+					particles.get(i).collisionDetection();
+					// update the acceleration for each particle
+					particles.get(i).setAcceleration();
+					// update the vectors for each particle
+					particles.get(i).update();
+				}
+			}
+			// render each particle
 			plane.repaint();
 		}
 	}
@@ -45,13 +57,13 @@ public class VirtualSpaceDriver {
 		particles.get(1).setMass(100);
 		particles.get(1).setVelocity(new Vector(0,9));
 		
-		// small satellite 
+		// small planet 
 		particles.get(2).getPos().setX(1000);
 		particles.get(2).getPos().setY(450);
 		particles.get(2).setMass(100);
 		particles.get(2).setVelocity(new Vector(0,8));
 		
-		// Sacrifice object
+		// small planet
 		particles.get(3).getPos().setX(750);
 		particles.get(3).getPos().setY(450);
 		particles.get(3).setMass(100);

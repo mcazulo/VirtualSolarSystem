@@ -8,7 +8,7 @@ public class Particle {
 	//final double G = 6.673e-11;
 	private final double G = .03;
 	private static int classId = 0;
-	public static final double timeStep = .2;
+	private static final double timeStep = .2;
 	
 	private int id;
 	private boolean removed;

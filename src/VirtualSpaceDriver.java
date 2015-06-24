@@ -48,6 +48,7 @@ public class VirtualSpaceDriver {
 		particles.add(new Particle());
 		particles.add(new Particle());
 		particles.add(new Particle());
+		particles.add(new Particle());
 		
 		//Sun Particle
 		particles.get(0).getPos().setX(0);
@@ -55,22 +56,30 @@ public class VirtualSpaceDriver {
 		particles.get(0).setMass(910000);
 		
 		// small planet
-		particles.get(1).getPos().setX(250);
+		particles.get(1).getPos().setX(400);
 		particles.get(1).getPos().setY(0);
 		particles.get(1).setMass(100);
 		particles.get(1).setVelocity(new Vector(0,9));
 		
 		// small planet 
-		particles.get(2).getPos().setX(400);
+		particles.get(2).getPos().setX(1000);
 		particles.get(2).getPos().setY(0);
-		particles.get(2).setMass(100);
-		particles.get(2).setVelocity(new Vector(0,8));
+		particles.get(2).setMass(190);
+		particles.get(2).setVelocity(new Vector(0,6.5));
 		
 		// small planet
-		particles.get(3).getPos().setX(150);
+		particles.get(3).getPos().setX(250);
 		particles.get(3).getPos().setY(0);
 		particles.get(3).setMass(100);
 		particles.get(3).setVelocity(new Vector( 0,12.5));
+		
+		// small planet 
+		particles.get(4).getPos().setX(1055);
+		particles.get(4).getPos().setY(0);
+		particles.get(4).setMass(80);
+		particles.get(4).setVelocity(new Vector(-0.37,6.8));
+		
+		particles.add(new SpaceCraft(500,0,new Vector(0,0), .000000000001));
 				
 		// Give each particles the list of particles
 		for(int i = 0; i < particles.size(); i++) {

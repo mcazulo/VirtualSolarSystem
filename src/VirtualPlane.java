@@ -1,13 +1,19 @@
 import java.awt.Color;
+import java.awt.Event;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
+import javax.swing.Action;
+import javax.swing.AbstractAction;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 
 
 public class VirtualPlane extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener {
@@ -36,6 +42,16 @@ public class VirtualPlane extends JPanel implements MouseListener, MouseMotionLi
 		addMouseMotionListener(this);
 		addMouseListener(this);
 		addMouseWheelListener(this);
+		// key bindings for controls
+		this.getInputMap().put(KeyStroke.getKeyStroke("UP"),"upThrust");
+		this.getInputMap().put(KeyStroke.getKeyStroke("DOWN"),"downThrust");
+		this.getInputMap().put(KeyStroke.getKeyStroke("LEFT"),"leftThrust");
+		this.getInputMap().put(KeyStroke.getKeyStroke("RIGHT"),"rightThrust");
+		this.getActionMap().put("upThrust", upThrust);
+		this.getActionMap().put("downThrust", downThrust);
+		this.getActionMap().put("leftThrust", leftThrust);
+		this.getActionMap().put("rightThrust", rightThrust);
+		
 	}
 	
 	public void paint(Graphics g) {
@@ -47,10 +63,10 @@ public class VirtualPlane extends JPanel implements MouseListener, MouseMotionLi
 		
 		/******************** Begining following code to be better sectioned later Part 1 *****************************
 		**************************************************************************************************************/
-		//globalOriginPos = new Vector((-(1)*(particles.get(1)).getPos().getX() + ((this.getWidth()/2.0) / globalScale))
-		//							,(-(1)*particles.get(1).getPos().getY() + ((this.getHeight()/2.0)/ globalScale)) );
+		globalOriginPos = new Vector((-(1)*(particles.get(5)).getPos().getX() + ((this.getWidth()/2.0) / globalScale))
+									,(-(1)*particles.get(5).getPos().getY() + ((this.getHeight()/2.0)/ globalScale)) );
 		//Scale Relative position
-		//globalOriginPos.multiply(globalScale);
+		globalOriginPos.multiply(globalScale);
 		/******************** End following code to be better sectioned later Part 1 ***********************************
 		***************************************************************************************************************/
 		
@@ -59,12 +75,23 @@ public class VirtualPlane extends JPanel implements MouseListener, MouseMotionLi
 			if(!particles.get(i).isRemoved()){
 				// apply global scale
 				particles.get(i).getPos().multiply(globalScale);
-				// draw circle
-				g.setColor(particles.get(i).getColor());
-				g.fillOval((int)globalOriginPos.getX() + (int)(particles.get(i).getPos().getX() - (particles.get(i).getSize() / 2.0))
-							,(int)globalOriginPos.getY() + (int)(particles.get(i).getPos().getY() - (particles.get(i).getSize() / 2.0))
-							,particles.get(i).getSize() * globalScale
-							,particles.get(i).getSize() * globalScale);
+				
+				// draw SpaceCraft
+				if((particles.get(i) instanceof SpaceCraft)){
+					// draw rectangle
+					g.setColor(particles.get(i).getColor());
+					g.fillRect( (int)globalOriginPos.getX() + (int)(particles.get(i).getPos().getX() - (particles.get(i).getSize() / 2.0))
+								,(int)globalOriginPos.getY() + (int)(particles.get(i).getPos().getY() - (particles.get(i).getSize() / 2.0))
+								,particles.get(i).getSize() / 5 * globalScale
+								,(particles.get(i).getSize() / 5 * globalScale) * 2);
+				} else{
+					// draw circle
+					g.setColor(particles.get(i).getColor());
+					g.fillOval((int)globalOriginPos.getX() + (int)(particles.get(i).getPos().getX() - (particles.get(i).getSize() / 2.0))
+								,(int)globalOriginPos.getY() + (int)(particles.get(i).getPos().getY() - (particles.get(i).getSize() / 2.0))
+								,particles.get(i).getSize() * globalScale
+								,particles.get(i).getSize() * globalScale);
+				}
 				// bring the global scale back so it doesn't accumulate
 				particles.get(i).getPos().divide(globalScale);
 			}
@@ -73,7 +100,7 @@ public class VirtualPlane extends JPanel implements MouseListener, MouseMotionLi
 		/******************** Begining following code to be better sectioned later Part 1 **************************
 		***********************************************************************************************************/
 		//descale relative position so it doesnt accumulate
-		//globalOriginPos.divide(globalScale);
+		globalOriginPos.divide(globalScale);
 		/******************** End following code to be better sectioned later Part 1 *******************************
 		************************************************************************************************************/
 	}
@@ -162,4 +189,43 @@ public class VirtualPlane extends JPanel implements MouseListener, MouseMotionLi
 		this.particles = particles;
 	}
 	
+	public ArrayList<Particle> getParticles(){
+		return particles;
+	}
+	
+	Action upThrust = new AbstractAction(){
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			SpaceCraft craft = (SpaceCraft) particles.get(5);
+			craft.upThrust();
+		}
+	};
+	
+	Action downThrust = new AbstractAction(){
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			SpaceCraft craft = (SpaceCraft) particles.get(5);
+			craft.downThrust();
+		}
+	};
+	
+	Action leftThrust = new AbstractAction(){
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			SpaceCraft craft = (SpaceCraft) particles.get(5);
+			craft.leftThrust();
+		}
+	};
+	
+	Action rightThrust = new AbstractAction(){
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			SpaceCraft craft = (SpaceCraft) particles.get(5);
+			craft.rightThrust();
+		}
+	};
 }
